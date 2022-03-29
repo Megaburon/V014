@@ -53,7 +53,10 @@
     <UnityVersion>2020.3.20f1</UnityVersion>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Assets\Scripts\V014Behaviour.cs" />
+    <Compile Include="Assets\Scripts\CameraController.cs" />
+    <Compile Include="Assets\Scripts\V014Controller.cs" />
+    <Compile Include="Assets\Scripts\LookAtMouse.cs" />
+    <Compile Include="Assets\Scripts\BallMovement.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">
