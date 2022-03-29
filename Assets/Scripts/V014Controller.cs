@@ -4,13 +4,12 @@ using UnityEngine;
 
 public class V014Controller : MonoBehaviour
 {
-    [SerializeField] float impulse;
-    [SerializeField] int speed;
-    [SerializeField] int addImpulse;
-    [SerializeField] int maxImpulse;
-    [SerializeField] int initialImpulse;
 
-    private bool idle;
+    [SerializeField] [Range(0f, 100f)] float speed;
+    [SerializeField] [Range(0f, 100f)] int addImpulse;
+    [SerializeField] [Range(0f, 100f)] int maxImpulse;
+
+    private float impulse;
     private bool thrust;
 
     private Rigidbody rb;
@@ -19,51 +18,63 @@ public class V014Controller : MonoBehaviour
 
     private void Start()
     {
-        initialImpulse = 5;
         rb = GetComponent<Rigidbody>();
         mainCamera = Camera.main;
-        rb.AddForce(Vector3.right * initialImpulse, ForceMode.Impulse);
         impulse = 0;
-        idle = true;
+
+        int initialImpulse = 5;
+        rb.AddForce(Vector3.forward * initialImpulse, ForceMode.Impulse);
+
     }
 
     private void Update()
     {
         LookAtMouse();
+        
+        Vector3 velocity = rb.velocity;
 
-        if (Input.GetMouseButton(0) && idle == true)
+        // al mantener presionado el botón frena progresivamente (aumenta fricción) y carga el impulso
+        if (Input.GetMouseButton(0))
         {
             thrust = false;
-            rb.drag = 5;
+            rb.drag = 2;
             impulse += addImpulse * Time.deltaTime;
-
         }
 
-        if (Input.GetMouseButtonUp(0))
+        //al soltar el botón regula el impulso y la fricción y activa el impulso mediante físicas
+        else if (Input.GetMouseButtonUp(0))
         {
-            if (impulse > maxImpulse) { impulse = maxImpulse; }
             rb.drag = 1.5f;
-            idle = false;
+            if (impulse > maxImpulse) { impulse = maxImpulse; }
+            if (impulse < speed) { impulse = speed; }
             thrust = true;
+        }
+
+        //mientras el jugador no interactua frena progresivamente hasta la velocidad por defecto.
+        else if (Input.GetMouseButton(0) == false)
+        {
+            if (rb.velocity.magnitude > speed)
+            {
+                rb.drag = 1.5f;
+            }
+
+            else
+            {
+                rb.drag = 0;
+            }
         }
     }
 
     private void FixedUpdate()
     {
-        Vector3 velocity = rb.velocity;
- 
+
+        //al activarse, anula su velocidad y recibe un impulso hacia adelante, resetea el valor del impulso y se desactiva
         if (thrust == true)
         {
             rb.velocity = Vector3.zero;
             rb.AddForce(transform.forward * impulse, ForceMode.Impulse);
             impulse = 0;
             thrust = false;
-        }
-
-        if (rb.velocity.magnitude <= speed)
-        {
-            rb.drag = 0;
-            idle = true;
         }
     }
 

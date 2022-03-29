@@ -722,11 +722,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: abed4cb263a4d924ab8c8721c4fe40d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  impulse: 50
-  speed: 0
-  addImpulse: 50
-  maxImpulse: 50
-  initialImpulse: 5
+  speed: 15
+  addImpulse: 60
+  maxImpulse: 60
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0
